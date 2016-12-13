@@ -423,6 +423,21 @@ describe('odata.parser grammar', function () {
         assert.equal(ast.$filter.left.name, "_first_name");
     });
 
+    describe('$count', function() {
+      [true, false].forEach(function(value) {
+        it('should parse $count=' + value, function() {
+          var ast = parser.parse('$count=' + value);
+          assert.equal(ast.$count, value);
+        });
+      });
+
+      it('should error parsing $count=whatever', function() {
+          var ast = parser.parse('$count=whatever');
+          assert.equal(ast.error, 'invalid $count parameter');
+          assert.equal(ast.$count, undefined);
+      });
+    });
+
     // it('xxxxx', function () {
     //     var ast = parser.parse("$top=2&$filter=Date gt datetime'2012-09-27T21:12:59'");
 
