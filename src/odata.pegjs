@@ -213,7 +213,10 @@ expandList                  =   i:identifierPath list:("," WSP? l:expandList {re
                                     return list;
                                 }
 
-//$skip
+// $count
+count                       =   "$count=" a:boolean { return { '$count': a }; }
+                            /   "$count=" .* { return {"error": 'invalid $count parameter'}; }
+// $skip
 skip                        =   "$skip=" a:INT {return {'$skip': ~~a }; }
                             /   "$skip=" .* { return {"error": 'invalid $skip parameter'}; }
 
@@ -396,6 +399,7 @@ exp                         =
                                 inlinecount /
                                 select /
                                 callback /
+                                count /
                                 unsupported
 
 query                       = list:expList {
