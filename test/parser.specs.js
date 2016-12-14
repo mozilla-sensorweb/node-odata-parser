@@ -437,4 +437,18 @@ describe('odata.parser grammar', function () {
       assert.equal(ast.$count, undefined);
     });
   });
+
+  describe('$resultFormat', function() {
+    it('should parse $resultFormat=dataArray', function() {
+      var ast = parser.parse('$resultFormat=dataArray');
+      assert.equal(ast.$resultFormat, 'dataArray');
+    });
+
+    it('should error parsing $resultFormat=whatever', function() {
+      var ast = parser.parse('$resultFormat=whatever');
+      assert.equal(ast.error, 'invalid $resultFormat parameter');
+      assert.equal(ast.$count, undefined);
+    });
+
+  });
 });

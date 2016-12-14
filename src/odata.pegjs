@@ -220,10 +220,10 @@ count                       =   "$count=" a:boolean { return { '$count': a }; }
 skip                        =   "$skip=" a:INT {return {'$skip': ~~a }; }
                             /   "$skip=" .* { return {"error": 'invalid $skip parameter'}; }
 
-//$format
+// $format
 format                      =   "$format=" v:.+ { return {'$format': v.join('') }; }
                             /   "$format=" .* { return {"error": 'invalid $format parameter'}; }
-//$inlinecount
+// $inlinecount
 inlinecount                 =   "$inlinecount=" v:("allpages" / "none") { return {'$inlinecount': v }; }
                             /   "$inlinecount=" .* { return {"error": 'invalid $inlinecount parameter'}; }
 
@@ -247,7 +247,7 @@ orderbyList                 = i:(id:identifier ord:(WSP ("asc"/"desc"))? {
                                     return list;
                                 }
 
-//$select
+// $select
 select                      =   "$select=" list:selectList { return { "$select":list }; }
                             /   "$select=" .* { return {"error": 'invalid $select parameter'}; }
 
@@ -268,7 +268,7 @@ selectList                  =
                                     return list;
                                 }
 
-//filter
+// $filter
 filter                      =   "$filter=" list:filterExpr {
                                     return {
                                         "$filter": list
@@ -377,6 +377,11 @@ op                          =
                                 "div" /
                                 "mod"
 
+// $resultFormat
+resultFormat                =   "$resultFormat=" "dataArray" { return { '$resultFormat': 'dataArray' }; }
+                            /   "$resultFormat=" .* { return { error: 'invalid $resultFormat parameter' }; }
+
+
 unsupported                 =   "$" er:.* { return { error: "unsupported method: " + er }; }
 
 //end: OData query options
@@ -400,6 +405,7 @@ exp                         =
                                 select /
                                 callback /
                                 count /
+                                resultFormat /
                                 unsupported
 
 query                       = list:expList {
