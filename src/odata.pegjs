@@ -204,12 +204,15 @@ top                         =   "$top=" a:INT { return { '$top': ~~a }; }
 expand                      =   "$expand=" list:expandList { return { "$expand": list }; }
                             /   "$expand=" .* { return {"error": 'invalid $expand parameter'}; }
 
-expandList                  =   i:identifierPath list:("," WSP? l:expandList {return l;})? {
+expandList                  =   i:identifierPath e:("(" e:exp ")" {return e;})? list:("," WSP? l:expandList {return l;})? {
                                     if (list === "") list = [];
-                                    if (require('util').isArray(list[0])) {
-                                        list = list[0];
+
+                                    var elem = i;
+                                    if (e) {
+                                      elem = [ i, e ];
                                     }
-                                    list.unshift(i);
+                                    list.unshift(elem);
+
                                     return list;
                                 }
 
@@ -276,12 +279,12 @@ filter                      =   "$filter=" list:filterExpr {
                                 }
                             /   "$filter=" .* { return {"error": 'invalid $filter parameter'}; }
 
-filterExpr                  = 
+filterExpr                  =
                               left:("(" WSP? filter:filterExpr WSP? ")"{return filter}) right:( WSP type:("and"/"or") WSP value:filterExpr{
                                     return { type: type, value: value}
                               })? {
                                 return filterExprHelper(left, right);
-                              } / 
+                              } /
                               left:cond right:( WSP type:("and"/"or") WSP value:filterExpr{
                                     return { type: type, value: value}
                               })? {

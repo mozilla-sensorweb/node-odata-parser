@@ -449,6 +449,19 @@ describe('odata.parser grammar', function () {
       assert.equal(ast.error, 'invalid $resultFormat parameter');
       assert.equal(ast.$count, undefined);
     });
+  });
 
+  describe('Expression inside expression', function() {
+    it('should parse $expand=Sensors,Observations($select=result),Datastream',
+       function() {
+      var ast = parser.parse(
+        '$expand=Sensors,Observations($select=result),Datastream'
+      );
+      assert.deepEqual(ast.$expand, [
+        'Sensors',
+        ['Observations', {'$select': ['result']}],
+        'Datastream'
+      ]);
+    });
   });
 });
