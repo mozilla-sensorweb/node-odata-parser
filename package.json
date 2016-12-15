@@ -4,12 +4,15 @@
   "description": "OData query string parser",
   "main": "lib/index.js",
   "scripts": {
+    "build": "pegjs src/odata.pegjs lib/odata-parser.js",
     "test": "rm -f lib/odata-parser.js && npm run-script prepublish && mocha -R spec",
-    "prepublish": "pegjs src/odata.pegjs lib/odata-parser.js"
+    "postinstall": "npm run build",
+    "prepublish": "npm run build"
   },
-  "dependencies": {},
+  "dependencies": {
+    "pegjs": "0.7.0"
+  },
   "devDependencies": {
-    "pegjs": "0.7.0",
     "mocha": "2.1.0"
   },
   "repository": {
