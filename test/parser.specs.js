@@ -300,6 +300,11 @@ describe('odata.parser grammar', function () {
     assert.ok(ast.$filter.right.args[0].value instanceof Date);
   });
 
+  it('should work with datetimeoffset without quotes', function () {
+    var ast = parser.parse("$filter=my_year gt 2016-01-01T01:01:01Z");
+    assert.ok(ast.$filter.right.value instanceof Date);
+  });
+
   ['indexof', 'concat', 'substring', 'replace'].forEach(function (func) {
     it('should parse ' + func + ' $filter', function () {
       var ast = parser.parse("$filter=" + func + "('haystack', needle) eq 'test'");

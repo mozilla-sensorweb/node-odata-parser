@@ -45,6 +45,7 @@ SQUOTE                      =   "%x27" / "'"
  */
 primitiveLiteral            =   null /
                                 binary /
+                                dateTimeOffsetNoQuoutes /
                                 dateTime /
                                 dateTimeOffset /
                                 guid /
@@ -79,6 +80,7 @@ byte                        =   DIGIT DIGIT DIGIT
 
 dateTime                    =   "datetime" SQUOTE a:dateTimeBody SQUOTE { return new Date(a); }
 
+dateTimeOffsetNoQuoutes     =   a:dateTimeOffsetBody { return new Date(a); }
 dateTimeOffset              =   "datetimeoffset" SQUOTE a:dateTimeOffsetBody SQUOTE { return new Date(a); }
 
 dateTimeBodyA               =  a:year "-" b:month "-" c:day "T" d:hour ":" e:minute {
