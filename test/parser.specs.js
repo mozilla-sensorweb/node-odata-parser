@@ -124,6 +124,26 @@ describe('odata.parser grammar', function () {
     assert.equal(ast.$filter.right.value, "O'Neil");
   });
 
+  it('should parse geo.intersects', function() {
+    var ast = parser.parse("$filter=geo\.intersects(location, location2)");
+    assert.equal(ast.$filter.type, "functioncall");
+    assert.equal(ast.$filter.func, "geo.intersects");
+    assert.equal(ast.$filter.args[0].type, "property");
+    assert.equal(ast.$filter.args[0].name, "location");
+    assert.equal(ast.$filter.args[1].type, "property");
+    assert.equal(ast.$filter.args[1].name, "location2");
+  });
+
+  it('should parse geo.intersects with literal', function() {
+    var ast = parser.parse("$filter=geo\.intersects(location, geography'POLYGON((30 10, 10 20, 20 40, 40 40, 30 10))')");
+    assert.equal(ast.$filter.type, "functioncall");
+    assert.equal(ast.$filter.func, "geo.intersects");
+    assert.equal(ast.$filter.args[0].type, "property");
+    assert.equal(ast.$filter.args[0].name, "location");
+    assert.equal(ast.$filter.args[1].type, "literal");
+    assert.equal(ast.$filter.args[1].value, "POLYGON((30 10, 10 20, 20 40, 40 40, 30 10))");
+  });
+
   it('should parse $filter with subproperty', function () {
     var ast = parser.parse("$filter=User/Name eq 'Jef'");
     assert.equal(ast.$filter.type, "eq");

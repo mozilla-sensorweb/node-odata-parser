@@ -293,7 +293,7 @@ filterExpr                  =
                                 return filterExprHelper(left, right);
                               }
 
-booleanFunctions2Args       = "substringof" / "endswith" / "startswith" / "IsOf"
+booleanFunctions2Args       = "substringof" / "endswith" / "startswith" / "IsOf" / "geo.intersects"
 
 booleanFunc                 =  f:booleanFunctions2Args "(" arg0:part "," WSP? arg1:part ")" {
                                     return {
@@ -312,13 +312,19 @@ booleanFunc                 =  f:booleanFunctions2Args "(" arg0:part "," WSP? ar
 
 otherFunctions1Arg          = "tolower" / "toupper" / "trim" / "length" / "year" /
                               "month" / "day" / "hour" / "minute" / "second" /
-                              "round" / "floor" / "ceiling"
+                              "round" / "floor" / "ceiling" / "geography"
 
 otherFunc1                  = f:otherFunctions1Arg "(" arg0:part ")" {
                                   return {
                                       type: "functioncall",
                                       func: f,
                                       args: [arg0]
+                                  }
+                              } /
+                              "geography" arg0:string {
+                                  return {
+                                      type: 'literal',
+                                      value: arg0
                                   }
                               }
 
